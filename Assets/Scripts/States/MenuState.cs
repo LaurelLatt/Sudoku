@@ -1,16 +1,22 @@
 using UnityEngine;
 
-public class MenuState : MonoBehaviour
+namespace States
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class MenuState : IGameState
     {
-        
-    }
+        public void Enter()
+        {
+            
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public void Exit()
+        {
+            
+        }
+
+        public void Update()
+        {
+            
+        }
     }
 }

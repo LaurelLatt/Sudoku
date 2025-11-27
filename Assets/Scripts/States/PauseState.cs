@@ -1,16 +1,22 @@
 using UnityEngine;
 
-public class PauseState : MonoBehaviour
+namespace States
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class PauseState : IGameState
     {
-        
-    }
+        public void Enter()
+        {
+            
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public void Exit()
+        {
+            
+        }
+
+        public void Update()
+        {
+            
+        }
     }
 }

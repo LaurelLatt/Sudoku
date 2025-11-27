@@ -1,16 +1,11 @@
 using UnityEngine;
 
-public class IGameState : MonoBehaviour
+namespace States
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public interface IGameState
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        void Enter();      // What happens when entering this state
+        void Exit();       // What happens when leaving this state
+        void Update();     // Optional: update logic if needed
     }
 }

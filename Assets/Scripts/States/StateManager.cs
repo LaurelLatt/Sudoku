@@ -4,16 +4,27 @@ namespace States
 {
     public class StateManager : MonoBehaviour
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-        
-        }
+        private IGameState currentState;
+        private IGameState menuState;
+        private IGameState gameplayState;
+        private IGameState pauseState;
+        private IGameState resultsState;
 
-        // Update is called once per frame
-        void Update()
+        private void Awake()
         {
-        
+            menuState = new MenuState();
+            gameplayState = new GameplayState();
+            pauseState = new PauseState();
+            resultsState = new ResultsState();
+            
+            // set menu as start
+            ChangeState(menuState);
+        }
+        public void ChangeState(IGameState newState) {
+            
+            currentState?.Exit();
+            currentState = newState;
+            currentState.Enter();
         }
     }
 }
