@@ -29,15 +29,15 @@ public class Cell
         if (!IsEditable) return;
         Debug.Log($"Set Value: {val}");
 
-        if (notify)
-        {
-            CheckInputForCorrect(val);
-        }
-
         DisplayedValue = val;
         OnValueChanged?.Invoke(DisplayedValue);
 
         BoardManager.Instance.CurrentBoard[Row, Col] = val;
+        
+        if (notify)
+        {
+            CheckInputForCorrect(val);
+        }
     }
 
     private void CheckInputForCorrect(int val)
