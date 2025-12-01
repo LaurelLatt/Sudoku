@@ -11,12 +11,14 @@ namespace States
         }
         public void Enter()
         {
-            
+            uiManager.ShowPauseScreen();
+            Time.timeScale = 0f;
         }
 
         public void Exit()
         {
-            
+            Time.timeScale = 1f;
+            uiManager.HidePauseScreen();
         }
 
         public void Update()
