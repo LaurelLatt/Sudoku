@@ -43,6 +43,11 @@ namespace States
             // set menu as start
             ChangeState(menuState);
         }
+
+        private void Update()
+        {
+            currentState?.Update();
+        }
         private void ChangeState(IGameState newState) {
             
             currentState?.Exit();

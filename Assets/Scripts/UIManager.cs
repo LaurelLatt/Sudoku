@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject resultsPanel;
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private Text mistakesText;
+    [SerializeField] private Text timerText;
     private GameObject currentPanel;
     
     
@@ -80,5 +81,12 @@ public class UIManager : MonoBehaviour
     private void UpdateMistakeText(int count)
     {
         mistakesText.text = "Mistakes: " + count.ToString();
+    }
+
+    public void UpdateTimerDisplay(float time)
+    {
+        int minutes = Mathf.FloorToInt(time / 60f);
+        int seconds = Mathf.FloorToInt(time % 60f);
+        timerText.text = $"{minutes:0}:{seconds:00}";
     }
 }

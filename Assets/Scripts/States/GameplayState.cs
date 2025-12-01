@@ -5,6 +5,7 @@ namespace States
     public class GameplayState : IGameState
     {
         private UIManager uiManager;
+        private float timer = 0f;
         public GameplayState(UIManager uiManager)
         {
             this.uiManager = uiManager;
@@ -22,7 +23,8 @@ namespace States
 
         public void Update()
         {
-            
+            timer += Time.deltaTime; 
+            uiManager.UpdateTimerDisplay(timer);
         }
     }
 }
