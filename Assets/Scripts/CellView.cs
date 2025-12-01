@@ -13,15 +13,18 @@ public class CellView : MonoBehaviour, IPointerClickHandler
     public void BindCell(Cell c) {
         Cell = c;
         Cell.OnValueChanged += SetText;
+        Cell.OnInputIncorrect += SetTextToWrongColor;
+        Cell.OnInputCorrect += SetTextToCorrectColor;
         
-        Debug.Log($"Cell Bind - row: {Cell.Row} col: {Cell.Col} value: {Cell.Value} editable: {Cell.IsEditable}");
-        SetText(Cell.Value);
+        SetText(Cell.DisplayedValue);
         SetInitialTextColor();
     }
 
     private void OnDestroy()
     {
         Cell.OnValueChanged -= SetText;
+        Cell.OnInputIncorrect -= SetTextToWrongColor;
+        Cell.OnInputCorrect -= SetTextToCorrectColor;
     }
 
     private void SetText(int value)
@@ -49,5 +52,18 @@ public class CellView : MonoBehaviour, IPointerClickHandler
     {
         Debug.Log("CellView.OnPointerClick");
         BoardManager.Instance.SelectCell(this);
+        HighlightCell();
+    }
+
+    public void HighlightCell()
+    {
+        Color highlightColor = Color.lightBlue;
+        highlightColor.a = 0.7f;
+        image.color = highlightColor;
+    }
+
+    public void UnhighlightCell()
+    {
+        image.color = Color.white;
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Commands;
 using UnityEngine;
@@ -5,6 +6,8 @@ using UnityEngine;
 public class BoardManager : MonoBehaviour
 {
     public static BoardManager Instance { get; private set; }
+    public int MistakeCount { get; private set; }
+    
     [SerializeField] private List<CellView> cellViewList = new List<CellView>(81);
     
     [SerializeField] private PuzzleGenerator puzzleGenerator;
@@ -14,7 +17,11 @@ public class BoardManager : MonoBehaviour
     
     private CellView[,] cellViews = new CellView[9,9];
     
-    private int[,] board;
+    private int[,] puzzleBoard;
+    private int[,] solutionBoard;
+
+    public event Action<int> OnMistakeCountChanged;
+    
     
     private void Awake()
     {
@@ -43,10 +50,23 @@ public class BoardManager : MonoBehaviour
         }
     }
     
+    private void RegisterCell(Cell cell)
+    {
+        cell.OnInputIncorrect += HandleMistake;
+    }
+    
+    
     public void SelectCell(CellView view) {
-        Debug.Log("Cell selected");
+        
+        if (selectedCellModel != null)
+        {
+            // set old cell view back to normal
+            selectedCellView.UnhighlightCell();
+        }
+
+        // set new selected cell
         selectedCellView = view;
-        selectedCellModel = view.Cell;  // gets the model
+        selectedCellModel = view.Cell; // gets the model
         Debug.Log($"Selected cell: {selectedCellModel.Row}, {selectedCellModel.Col}, editable: {selectedCellModel.IsEditable}");
     }
 
@@ -64,24 +84,28 @@ public class BoardManager : MonoBehaviour
     public void SetBoard()
     {
         TransferListToArray();
-        board = puzzleGenerator.GeneratePuzzle();
+        puzzleBoard = puzzleGenerator.GeneratePuzzle();
+        solutionBoard = puzzleGenerator.solvedPuzzle;
         for (int i = 0; i < 9; i++)
         {
             for (int j = 0; j < 9; j++)
             {
-                int value = board[i, j];
-                bool isEditable = value == 0;
-                CreateCell(i, j, value, isEditable);
+                int displayValue = puzzleBoard[i, j];
+                int correctValue = solutionBoard[i, j];
+                bool isEditable = displayValue == 0;
+                CreateCell(i, j, displayValue, isEditable, correctValue);
             }
         }
     }
 
-    private void CreateCell(int row, int column, int value, bool isEditable)
+    private void CreateCell(int row, int column, int displayValue, bool isEditable, int correctValue)
     {
-        Cell cell = new Cell(row, column, value, isEditable);
+        Cell cell = new Cell(row, column, displayValue, isEditable, correctValue);
         CellView cellView = cellViews[row, column];
         
         cellView.BindCell(cell);
+        
+        RegisterCell(cell);
     }
 
     private void TransferListToArray()
@@ -95,5 +119,11 @@ public class BoardManager : MonoBehaviour
                 index++;
             }
         }
+    }
+    
+    private void HandleMistake()
+    {
+        MistakeCount++;
+        OnMistakeCountChanged?.Invoke(MistakeCount);
     }
 }

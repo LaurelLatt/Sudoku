@@ -6,23 +6,40 @@ public class Cell
     public int Row { get; }
     public int Col {get; }
     public bool IsEditable {get; }
-    public int Value {get; private set;}
+    public int DisplayedValue {get; private set;}
+
+    private int correctValue;
 
     public event Action<int> OnValueChanged;
+    public event Action OnInputCorrect;
+    public event Action OnInputIncorrect;
+    
 
-    public Cell(int row, int col, int value, bool isEditable)
+    public Cell(int row, int col, int displayedValue, bool isEditable, int correctValue)
     {
         Row = row;
         Col = col;
-        Value = value;
+        DisplayedValue = displayedValue;
         IsEditable = isEditable;
+        this.correctValue = correctValue;
     }
 
     public void SetValue(int val)
     {
         if (!IsEditable) return;
         Debug.Log($"Set Value: {val}");
-        Value = val;
-        OnValueChanged?.Invoke(Value);
+        
+        CheckInputForCorrect(val);
+        
+        DisplayedValue = val;
+        OnValueChanged?.Invoke(DisplayedValue);
+    }
+
+    private void CheckInputForCorrect(int val)
+    {
+        if (val == correctValue)
+            OnInputCorrect?.Invoke();
+        else
+            OnInputIncorrect?.Invoke();
     }
 }

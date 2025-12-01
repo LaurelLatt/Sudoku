@@ -89,7 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bac594c6a3b0646eab9314f4576f8a9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CellView
-  image: {fileID: 0}
+  image: {fileID: 6601199258285618685}
   text: {fileID: 1196843520995909804}
 --- !u!1 &5244971211639454155
 GameObject:

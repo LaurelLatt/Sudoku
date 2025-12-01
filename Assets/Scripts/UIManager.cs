@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -7,13 +8,19 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject gamePanel;
     [SerializeField] private GameObject resultsPanel;
     [SerializeField] private GameObject pausePanel;
+    [SerializeField] private Text mistakesText;
     private GameObject currentPanel;
+    
+    
     
     // Show start screen at start of game
     void Start()
     {
         ShowStartScreen();
+        BoardManager.Instance.OnMistakeCountChanged += UpdateMistakeText;
     }
+
+    #region ScreenSetup
     
     // shows start screen and hides all other screens
     public void ShowStartScreen()
@@ -45,7 +52,16 @@ public class UIManager : MonoBehaviour
     {
         pausePanel.SetActive(false);
     }
-
+    private void HideAllScreens()
+    {
+        startPanel.SetActive(false);
+        gamePanel.SetActive(false);
+        resultsPanel.SetActive(false);
+        pausePanel.SetActive(false);
+    }
+    
+    #endregion
+    
     // closes the entire application
     public void QuitGame()
     {
@@ -60,14 +76,9 @@ public class UIManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
     
-
-    private void HideAllScreens()
+    private void UpdateMistakeText(int count)
     {
-        startPanel.SetActive(false);
-        gamePanel.SetActive(false);
-        resultsPanel.SetActive(false);
-        pausePanel.SetActive(false);
+        mistakesText.text = "Mistakes: " + count.ToString();
     }
 }

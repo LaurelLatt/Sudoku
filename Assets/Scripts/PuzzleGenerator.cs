@@ -31,4 +31,5 @@ public class PuzzleGenerator : MonoBehaviour
     {
         return gamePuzzle;
     }
+    
 }
