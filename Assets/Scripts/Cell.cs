@@ -21,6 +21,7 @@ public class Cell
     public void SetValue(int val)
     {
         if (!IsEditable) return;
+        Debug.Log($"Set Value: {val}");
         Value = val;
         OnValueChanged?.Invoke(Value);
     }

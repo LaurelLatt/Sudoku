@@ -33,6 +33,7 @@ public class BoardManager : MonoBehaviour
 
         for (int i = 1; i <= 9; i++) {
             if (Input.GetKeyDown(i.ToString())) {
+                Debug.Log($"Input received: {i}");
                 PlaceNumber(i);
             }
         }
@@ -43,13 +44,18 @@ public class BoardManager : MonoBehaviour
     }
     
     public void SelectCell(CellView view) {
+        Debug.Log("Cell selected");
         selectedCellView = view;
-        selectedCellModel = view.cell;  // gets the model
+        selectedCellModel = view.Cell;  // gets the model
+        Debug.Log($"Selected cell: {selectedCellModel.Row}, {selectedCellModel.Col}, editable: {selectedCellModel.IsEditable}");
     }
 
     private void PlaceNumber(int number) {
         if (!selectedCellModel.IsEditable)
+        {
+            Debug.Log("Cell is not editable");
             return;
+        }
 
         Command cmd = new SetNumberCommand(selectedCellModel, number);
         CommandManager.Instance.Execute(cmd);
@@ -64,12 +70,13 @@ public class BoardManager : MonoBehaviour
             for (int j = 0; j < 9; j++)
             {
                 int value = board[i, j];
-                CreateCell(i, j, value, value == 0);
+                bool isEditable = value == 0;
+                CreateCell(i, j, value, isEditable);
             }
         }
     }
 
-    private void CreateCell(int row, int column, int value, bool isEditable = true)
+    private void CreateCell(int row, int column, int value, bool isEditable)
     {
         Cell cell = new Cell(row, column, value, isEditable);
         CellView cellView = cellViews[row, column];
