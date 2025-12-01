@@ -4,6 +4,7 @@ namespace States
 {
     public class StateManager : MonoBehaviour
     {
+        public static StateManager Instance { get; private set; }
         [SerializeField] private UIManager uiManager;
         
         private IGameState currentState;
@@ -11,7 +12,17 @@ namespace States
         private IGameState gameplayState;
         private IGameState pauseState;
         private IGameState resultsState;
+        private void Awake()
+        {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
 
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         private void OnEnable()
         {
             Application.quitting += OnGameQuit;
@@ -22,7 +33,7 @@ namespace States
             Application.quitting -= OnGameQuit;
         }
         
-        private void Awake()
+        private void Start()
         {
             menuState = new MenuState(uiManager);
             gameplayState = new GameplayState(uiManager);

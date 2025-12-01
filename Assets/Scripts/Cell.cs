@@ -24,13 +24,16 @@ public class Cell
         this.correctValue = correctValue;
     }
 
-    public void SetValue(int val)
+    public void SetValue(int val, bool notify = true)
     {
         if (!IsEditable) return;
         Debug.Log($"Set Value: {val}");
-        
-        CheckInputForCorrect(val);
-        
+
+        if (notify)
+        {
+            CheckInputForCorrect(val);
+        }
+
         DisplayedValue = val;
         OnValueChanged?.Invoke(DisplayedValue);
 

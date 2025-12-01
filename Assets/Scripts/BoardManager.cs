@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Commands;
+using States;
 using UnityEngine;
 
 public class BoardManager : MonoBehaviour
@@ -45,7 +46,7 @@ public class BoardManager : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Backspace)) {
-            PlaceNumber(0);
+            RemoveNumber();
         }
     }
 
@@ -87,6 +88,18 @@ public class BoardManager : MonoBehaviour
         }
 
         Command cmd = new SetNumberCommand(selectedCellModel, number);
+        CommandManager.Instance.Execute(cmd);
+    }
+
+    private void RemoveNumber()
+    {
+        if (!selectedCellModel.IsEditable)
+        {
+            Debug.Log("Cell is not editable");
+            return;
+        }
+
+        Command cmd = new DeleteCommand(selectedCellModel);
         CommandManager.Instance.Execute(cmd);
     }
 
@@ -178,6 +191,26 @@ public class BoardManager : MonoBehaviour
 
     private void HandleCorrectInput()
     {
+        if (CheckPuzzleComplete())
+        {
+            StateManager.Instance.ChangeToResultsState();
+        }
+    }
+
+    public void CompletePuzzle()
+    {
+        for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+                Cell cell = cells[i, j];
+                if (cell.IsEditable)
+                {
+                    cell.SetValue(solutionBoard[i, j], notify: false);
+                }
+            }
+        }
         
+        HandleCorrectInput();
     }
 }

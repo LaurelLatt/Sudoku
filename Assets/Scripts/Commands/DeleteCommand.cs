@@ -15,7 +15,7 @@ namespace Commands
 
         public override void Execute()
         {
-            cell.SetValue(newValue);
+            cell.SetValue(newValue, notify: false);
         }
 
         public override void Undo()
