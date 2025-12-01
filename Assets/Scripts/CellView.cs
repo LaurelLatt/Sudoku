@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class CellView : MonoBehaviour, IPointerClickHandler
 {
     public Cell cell { get; private set; }
+    
+    [SerializeField] private Image image;
     [SerializeField] private Text text;
 
     public void BindCell(Cell c) {

@@ -4,6 +4,8 @@ namespace States
 {
     public class StateManager : MonoBehaviour
     {
+        [SerializeField] private UIManager uiManager;
+        
         private IGameState currentState;
         private IGameState menuState;
         private IGameState gameplayState;
@@ -12,19 +14,24 @@ namespace States
 
         private void Awake()
         {
-            menuState = new MenuState();
-            gameplayState = new GameplayState();
-            pauseState = new PauseState();
-            resultsState = new ResultsState();
+            menuState = new MenuState(uiManager);
+            gameplayState = new GameplayState(uiManager);
+            pauseState = new PauseState(uiManager);
+            resultsState = new ResultsState(uiManager);
             
             // set menu as start
             ChangeState(menuState);
         }
-        public void ChangeState(IGameState newState) {
+        private void ChangeState(IGameState newState) {
             
             currentState?.Exit();
             currentState = newState;
             currentState.Enter();
         }
+
+        public void ChangeToMenuState() => ChangeState(menuState);
+        public void ChangeToGameplayState() => ChangeState(gameplayState);
+        public void ChangeToPauseState() => ChangeState(pauseState);
+        public void ChangeToResultsState() => ChangeState(resultsState);
     }
 }

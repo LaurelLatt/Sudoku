@@ -10,7 +10,8 @@ namespace Commands
         public SetNumberCommand(Cell cell, int number)
         {
             this.cell = cell;
-            this.newValue = number;
+            oldValue = newValue;
+            newValue = number;
         }
 
         public override void Execute()
