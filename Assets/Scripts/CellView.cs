@@ -20,11 +20,14 @@ public class CellView : MonoBehaviour, IPointerClickHandler
         SetInitialTextColor();
     }
 
-    private void OnDestroy()
+    public void UnbindCell()
     {
         Cell.OnValueChanged -= SetText;
         Cell.OnInputIncorrect -= SetTextToWrongColor;
         Cell.OnInputCorrect -= SetTextToCorrectColor;
+        Cell = null;
+        SetText(0);
+        
     }
 
     private void SetText(int value)

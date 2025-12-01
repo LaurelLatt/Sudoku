@@ -12,6 +12,16 @@ namespace States
         private IGameState pauseState;
         private IGameState resultsState;
 
+        private void OnEnable()
+        {
+            Application.quitting += OnGameQuit;
+        }
+
+        private void OnDisable()
+        {
+            Application.quitting -= OnGameQuit;
+        }
+        
         private void Awake()
         {
             menuState = new MenuState(uiManager);
@@ -27,6 +37,11 @@ namespace States
             currentState?.Exit();
             currentState = newState;
             currentState.Enter();
+        }
+        
+        private void OnGameQuit()
+        {
+            currentState?.Exit();
         }
 
         public void ChangeToMenuState() => ChangeState(menuState);

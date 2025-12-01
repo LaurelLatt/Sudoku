@@ -33,6 +33,8 @@ public class Cell
         
         DisplayedValue = val;
         OnValueChanged?.Invoke(DisplayedValue);
+
+        BoardManager.Instance.CurrentBoard[Row, Col] = val;
     }
 
     private void CheckInputForCorrect(int val)

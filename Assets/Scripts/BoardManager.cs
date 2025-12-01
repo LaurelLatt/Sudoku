@@ -5,23 +5,22 @@ using UnityEngine;
 
 public class BoardManager : MonoBehaviour
 {
+    public event Action<int> OnMistakeCountChanged;
     public static BoardManager Instance { get; private set; }
-    public int MistakeCount { get; private set; }
+    public int[,] CurrentBoard = new int[9,9];
     
     [SerializeField] private List<CellView> cellViewList = new List<CellView>(81);
-    
     [SerializeField] private PuzzleGenerator puzzleGenerator;
     
     private Cell selectedCellModel;
     private CellView selectedCellView;
-    
     private CellView[,] cellViews = new CellView[9,9];
-    
-    private int[,] puzzleBoard;
+    private Cell[,] cells = new Cell[9,9];
+   
+    private int[,] puzzleTemplate;
     private int[,] solutionBoard;
-
-    public event Action<int> OnMistakeCountChanged;
     
+    private int mistakeCount;
     
     private void Awake()
     {
@@ -49,12 +48,22 @@ public class BoardManager : MonoBehaviour
             PlaceNumber(0);
         }
     }
-    
-    private void RegisterCell(Cell cell)
+
+    public bool CheckPuzzleComplete()
     {
-        cell.OnInputIncorrect += HandleMistake;
+        for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+                if (CurrentBoard[i, j] != solutionBoard[i, j])
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
-    
     
     public void SelectCell(CellView view) {
         
@@ -83,20 +92,41 @@ public class BoardManager : MonoBehaviour
 
     public void SetBoard()
     {
-        TransferListToArray();
-        puzzleBoard = puzzleGenerator.GeneratePuzzle();
-        solutionBoard = puzzleGenerator.solvedPuzzle;
+        PopulateGrids();
         for (int i = 0; i < 9; i++)
         {
             for (int j = 0; j < 9; j++)
             {
-                int displayValue = puzzleBoard[i, j];
+                int displayValue = puzzleTemplate[i, j];
                 int correctValue = solutionBoard[i, j];
                 bool isEditable = displayValue == 0;
                 CreateCell(i, j, displayValue, isEditable, correctValue);
             }
         }
     }
+    
+    public void ClearBoard()
+    {
+        for (int r = 0; r < 9; r++)
+        {
+            for (int c = 0; c < 9; c++)
+            {
+                // 1. Unregister model events (if model exists)
+                if (cells[r, c] != null)
+                {
+                    UnregisterCell(cells[r, c]);
+                    cells[r, c] = null;
+                }
+
+                // 2. Unbind cell views from cells
+                if (cellViews[r, c] != null)
+                {
+                    cellViews[r, c].UnbindCell();
+                }
+            }
+        }
+    }
+
 
     private void CreateCell(int row, int column, int displayValue, bool isEditable, int correctValue)
     {
@@ -104,8 +134,19 @@ public class BoardManager : MonoBehaviour
         CellView cellView = cellViews[row, column];
         
         cellView.BindCell(cell);
-        
+        cells[row, column] = cell;
         RegisterCell(cell);
+    }
+    
+    private void RegisterCell(Cell cell)
+    {
+        cell.OnInputIncorrect += HandleMistake;
+        cell.OnInputCorrect += HandleCorrectInput;
+    }
+    private void UnregisterCell(Cell cell)
+    {
+        cell.OnInputIncorrect -= HandleMistake;
+        cell.OnInputCorrect -= HandleCorrectInput;
     }
 
     private void TransferListToArray()
@@ -121,9 +162,22 @@ public class BoardManager : MonoBehaviour
         }
     }
     
+    private void PopulateGrids()
+    {
+        TransferListToArray();
+        puzzleTemplate = puzzleGenerator.GeneratePuzzle();
+        solutionBoard = puzzleGenerator.solvedPuzzle;
+        CurrentBoard = puzzleTemplate;
+    }
+    
     private void HandleMistake()
     {
-        MistakeCount++;
-        OnMistakeCountChanged?.Invoke(MistakeCount);
+        mistakeCount++;
+        OnMistakeCountChanged?.Invoke(mistakeCount);
+    }
+
+    private void HandleCorrectInput()
+    {
+        
     }
 }

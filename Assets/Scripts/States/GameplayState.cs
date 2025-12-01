@@ -17,7 +17,7 @@ namespace States
 
         public void Exit()
         {
-            
+            BoardManager.Instance.ClearBoard();
         }
 
         public void Update()
