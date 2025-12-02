@@ -22,10 +22,13 @@ public class CellView : MonoBehaviour, IPointerClickHandler
 
     public void UnbindCell()
     {
-        Cell.OnValueChanged -= SetText;
-        Cell.OnInputIncorrect -= SetTextToWrongColor;
-        Cell.OnInputCorrect -= SetTextToCorrectColor;
-        Cell = null;
+        if (Cell != null)
+        {
+            Cell.OnValueChanged -= SetText;
+            Cell.OnInputIncorrect -= SetTextToWrongColor;
+            Cell.OnInputCorrect -= SetTextToCorrectColor;
+            Cell = null;
+        }
         SetText(0);
         
     }

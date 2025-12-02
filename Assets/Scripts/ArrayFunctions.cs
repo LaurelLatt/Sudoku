@@ -1,51 +1,59 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class ArrayFunctions
 {
-    public static int[] Flatten2DArray(int[,] board)
+    public static T[][] CreateJagged<T>(int rows, int cols)
     {
-        int[] flat = new int[81];
-        int index = 0;
-        for (int i = 0; i < 9; i++)
-        {
-            for (int j = 0; j < 9; j++)
-            {
-                flat[index++] = board[i, j];
-            }
-        }
-        return flat;
+        var arr = new T[rows][];
+        for (int i = 0; i < rows; i++)
+            arr[i] = new T[cols];
+        return arr;
     }
-    
-    public static int[,] UnflattenArray(int[] flat)
+
+    public static int[][] CreateJagged(int rows, int cols)
     {
-        int[,] board = new int[9, 9];
-        int index = 0;
-        for (int i = 0; i < 9; i++)
-        {
-            for (int j = 0; j < 9; j++)
-            {
-                board[i, j] = flat[index++];
-            }
-        }
-        return board;
+        var arr = new int[rows][];
+        for (int i = 0; i < rows; i++)
+            arr[i] = new int[cols];
+        return arr;
     }
-    
-    public static int[,] Copy2DArray(int[,] source)
+
+    public static int[][] CopyJagged(int[][] source)
     {
-        int rows = source.GetLength(0);
-        int cols = source.GetLength(1);
+        if (source == null) return null;
 
-        int[,] result = new int[rows, cols];
-
-        for (int r = 0; r < rows; r++)
+        int[][] copy = new int[source.Length][];
+        for (int i = 0; i < source.Length; i++)
         {
-            for (int c = 0; c < cols; c++)
-            {
-                result[r, c] = source[r, c];
-            }
+            if (source[i] != null)
+                copy[i] = source[i].ToArray();
+            else
+                copy[i] = new int[0]; 
+        }
+        return copy;
+    }
+
+    public static void PrintBoard( int[][] board)
+    {
+        if (board == null)
+        {
+            Debug.Log($"board is null!");
+            return;
         }
 
-        return result;
+        string output = "";
+        for (int i = 0; i < board.Length; i++)
+        {
+            string rowStr = "";
+            for (int j = 0; j < board[i].Length; j++)
+            {
+                rowStr += board[i][j] + " ";
+            }
+            output += rowStr + "\n";
+        }
+
+        Debug.Log(output);
     }
 }

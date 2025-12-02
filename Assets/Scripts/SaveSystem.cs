@@ -4,9 +4,9 @@ using UnityEngine;
 [System.Serializable]
 public class SaveData
 {
-    public int[] currentBoard;
-    public int[] solvedBoard;
-    public int[] puzzleBoard;
+    public int[][] currentBoard;
+    public int[][] solvedBoard;
+    public int[][] puzzleBoard;
 
     public float timer;
     public int mistakes;
@@ -20,6 +20,7 @@ public static class SaveSystem
     {
         string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(SavePath, json);
+        Debug.Log(json);
     }
 
     public static SaveData Load()

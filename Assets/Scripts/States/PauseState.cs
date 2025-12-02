@@ -28,13 +28,16 @@ namespace States
         
         private void SaveGame()
         {
+            ArrayFunctions.PrintBoard(BoardManager.Instance.CurrentBoard);
+            ArrayFunctions.PrintBoard(BoardManager.Instance.puzzleTemplate);
+            ArrayFunctions.PrintBoard(BoardManager.Instance.solutionBoard);
             SaveData data = new SaveData
             {
-                currentBoard = BoardManager.Instance.CompressCurrentBoard(),
-                puzzleBoard = BoardManager.Instance.CompressPuzzleTemplate(),
-                solvedBoard = BoardManager.Instance.CompressSolutionBoard(),
-                mistakes = BoardManager.Instance.MistakeCount,
-                timer = gameplayState.Timer
+                currentBoard = ArrayFunctions.CopyJagged(BoardManager.Instance.CurrentBoard),
+                puzzleBoard = ArrayFunctions.CopyJagged(BoardManager.Instance.puzzleTemplate),
+                solvedBoard = ArrayFunctions.CopyJagged(BoardManager.Instance.solutionBoard),
+                timer = gameplayState.Timer,
+                mistakes = BoardManager.Instance.MistakeCount
             };
 
             SaveSystem.Save(data);

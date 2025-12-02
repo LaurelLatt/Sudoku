@@ -39,11 +39,8 @@ namespace States
 
         private void LoadSavedGame()
         {
-            int[,] puzzleTemplate = ArrayFunctions.UnflattenArray(saveData.puzzleBoard);
-            int[,] solvedBoard = ArrayFunctions.UnflattenArray(saveData.solvedBoard);
-            int[,] currentBoard = ArrayFunctions.UnflattenArray(saveData.currentBoard);
-            
-            BoardManager.Instance.LoadSavedGrids(puzzleTemplate, solvedBoard, currentBoard);
+            BoardManager.Instance.LoadSavedGrids(saveData.puzzleBoard,
+                saveData.solvedBoard, saveData.currentBoard);
             BoardManager.Instance.SetBoardFromLoad();
             Timer = saveData.timer;
             uiManager.UpdateTimerDisplay(Timer);
