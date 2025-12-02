@@ -8,10 +8,14 @@ namespace States
         [SerializeField] private UIManager uiManager;
         
         private IGameState currentState;
-        private IGameState menuState;
-        private IGameState gameplayState;
-        private IGameState pauseState;
-        private IGameState resultsState;
+        private MenuState menuState;
+        private GameplayState gameplayState;
+        private PauseState pauseState;
+        private ResultsState resultsState;
+        
+        public bool LoadPrevious {get; private set;}
+        public SaveData CachedData {get; private set;}
+        
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -37,7 +41,7 @@ namespace States
         {
             menuState = new MenuState(uiManager);
             gameplayState = new GameplayState(uiManager);
-            pauseState = new PauseState(uiManager);
+            pauseState = new PauseState(uiManager, gameplayState);
             resultsState = new ResultsState(uiManager);
             
             // set menu as start
@@ -48,6 +52,7 @@ namespace States
         {
             currentState?.Update();
         }
+        
         private void ChangeState(IGameState newState) {
             
             currentState?.Exit();
@@ -64,5 +69,21 @@ namespace States
         public void ChangeToGameplayState() => ChangeState(gameplayState);
         public void ChangeToPauseState() => ChangeState(pauseState);
         public void ChangeToResultsState() => ChangeState(resultsState);
+        
+        public void StartNewGame()
+        {
+            LoadPrevious = false;
+            ChangeToGameplayState();
+        }
+
+        public void ResumeGame()
+        {
+            LoadPrevious = true;
+            CachedData = SaveSystem.Load();
+            if (CachedData != null)
+            {
+                ChangeToGameplayState();
+            }
+        }
     }
 }

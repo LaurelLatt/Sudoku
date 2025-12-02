@@ -17,11 +17,11 @@ public class BoardManager : MonoBehaviour
     private CellView selectedCellView;
     private CellView[,] cellViews = new CellView[9,9];
     private Cell[,] cells = new Cell[9,9];
-   
+
     private int[,] puzzleTemplate;
     private int[,] solutionBoard;
     
-    private int mistakeCount;
+    public int MistakeCount { get; private set; }
     
     private void Awake()
     {
@@ -103,21 +103,32 @@ public class BoardManager : MonoBehaviour
         CommandManager.Instance.Execute(cmd);
     }
 
-    public void SetBoard()
+    public void SetNewBoard()
     {
         PopulateGrids();
+        CreateCells();
+    }
+
+    public void SetBoardFromLoad()
+    {
+        if (CurrentBoard == null || solutionBoard == null || puzzleTemplate == null) return;
+        CreateCells();
+    }
+
+    private void CreateCells()
+    {
         for (int i = 0; i < 9; i++)
         {
             for (int j = 0; j < 9; j++)
             {
-                int displayValue = puzzleTemplate[i, j];
+                int displayValue = CurrentBoard[i, j];
                 int correctValue = solutionBoard[i, j];
-                bool isEditable = displayValue == 0;
+                bool isEditable = puzzleTemplate[i, j] == 0;
                 CreateCell(i, j, displayValue, isEditable, correctValue);
             }
         }
     }
-    
+
     public void ClearBoard()
     {
         for (int r = 0; r < 9; r++)
@@ -162,7 +173,7 @@ public class BoardManager : MonoBehaviour
         cell.OnInputCorrect -= HandleCorrectInput;
     }
 
-    private void TransferListToArray()
+    private void TransferCellViewListToArray()
     {
         int index = 0;
         for (int i = 0; i < 9; i++)
@@ -177,16 +188,24 @@ public class BoardManager : MonoBehaviour
     
     private void PopulateGrids()
     {
-        TransferListToArray();
+        TransferCellViewListToArray();
         puzzleTemplate = puzzleGenerator.GeneratePuzzle();
         solutionBoard = puzzleGenerator.solvedPuzzle;
-        CurrentBoard = puzzleTemplate;
+        CurrentBoard = ArrayFunctions.Copy2DArray(puzzleTemplate);
+    }
+
+    public void LoadSavedGrids(int[,] puzzleTemplate, int[,] solutionBoard, int[,] currentBoard)
+    {
+        TransferCellViewListToArray();
+        this.puzzleTemplate = puzzleTemplate;
+        this.solutionBoard = solutionBoard;
+        CurrentBoard = currentBoard;
     }
     
     private void HandleMistake()
     {
-        mistakeCount++;
-        OnMistakeCountChanged?.Invoke(mistakeCount);
+        MistakeCount++;
+        OnMistakeCountChanged?.Invoke(MistakeCount);
     }
 
     private void HandleCorrectInput()
@@ -213,4 +232,24 @@ public class BoardManager : MonoBehaviour
         
         HandleCorrectInput();
     }
+    
+    #region Helpers for save system
+
+    public int[] CompressPuzzleTemplate()
+    {
+        return ArrayFunctions.Flatten2DArray(puzzleTemplate);
+    }
+
+    public int[] CompressSolutionBoard()
+    {
+        return ArrayFunctions.Flatten2DArray(solutionBoard);
+    }
+
+    public int[] CompressCurrentBoard()
+    {
+        return ArrayFunctions.Flatten2DArray(CurrentBoard);
+    }
+    
+    #endregion
+    
 }

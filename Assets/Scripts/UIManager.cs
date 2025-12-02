@@ -78,7 +78,7 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     
-    private void UpdateMistakeText(int count)
+    public void UpdateMistakeText(int count)
     {
         mistakesText.text = "Mistakes: " + count.ToString();
     }
