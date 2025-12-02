@@ -41,7 +41,7 @@ public class CellView : MonoBehaviour, IPointerClickHandler
         text.color = Cell.IsEditable == true ? Color.blue : Color.black;
     }
 
-    private void SetTextToWrongColor()
+    public void SetTextToWrongColor()
     {
         text.color = Color.red;
     }

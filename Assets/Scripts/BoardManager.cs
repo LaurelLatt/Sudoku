@@ -159,6 +159,12 @@ public class BoardManager : MonoBehaviour
         
         cellView.BindCell(cell);
         cells[row, column] = cell;
+        
+        if (isEditable && displayValue != 0 && displayValue != correctValue)
+        {
+            cellView.SetTextToWrongColor();
+        }
+        
         RegisterCell(cell);
     }
     
