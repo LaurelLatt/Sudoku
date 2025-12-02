@@ -1,5 +1,6 @@
 using System.IO;
 using UnityEngine;
+using Newtonsoft.Json;
 
 [System.Serializable]
 public class SaveData
@@ -18,7 +19,9 @@ public static class SaveSystem
 
     public static void Save(SaveData data)
     {
-        string json = JsonUtility.ToJson(data, true);
+        // Serialize using Newtonsoft.Json
+        string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+
         File.WriteAllText(SavePath, json);
         Debug.Log(json);
     }
@@ -29,7 +32,9 @@ public static class SaveSystem
             return null;
 
         string json = File.ReadAllText(SavePath);
-        return JsonUtility.FromJson<SaveData>(json);
+
+        // Deserialize using Newtonsoft.Json
+        return JsonConvert.DeserializeObject<SaveData>(json);
     }
     
 }
