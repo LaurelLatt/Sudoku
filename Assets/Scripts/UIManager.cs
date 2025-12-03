@@ -10,9 +10,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private Text mistakesText;
     [SerializeField] private Text timerText;
+    [SerializeField] private Text gamesPlayedText;
+    [SerializeField] private Text winRateText;
+    [SerializeField] private Text bestTimeText;
     private GameObject currentPanel;
-    
-    
     
     // Show start screen at start of game
     void Start()
@@ -83,10 +84,31 @@ public class UIManager : MonoBehaviour
         mistakesText.text = "Mistakes: " + count.ToString();
     }
 
+    public void UpdateGamesPlayedText(int count)
+    {
+        gamesPlayedText.text = count.ToString();
+    }
+
+    public void UpdateWinRateText(int gamesPlayed, int gamesCompleted)
+    {
+        int percentage = gamesCompleted / gamesPlayed * 100;
+        winRateText.text = percentage + "%";
+    }
     public void UpdateTimerDisplay(float time)
+    {
+        timerText.text = TimeToString(time);
+    }
+
+    public void UpdateBestTimeDisplay(float time)
+    {
+        bestTimeText.text = TimeToString(time);
+    }
+
+    private string TimeToString(float time)
     {
         int minutes = Mathf.FloorToInt(time / 60f);
         int seconds = Mathf.FloorToInt(time % 60f);
-        timerText.text = $"{minutes:0}:{seconds:00}";
+        string text = $"{minutes:0}:{seconds:00}";
+        return text;
     }
 }

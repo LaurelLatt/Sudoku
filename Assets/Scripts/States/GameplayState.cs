@@ -14,6 +14,7 @@ namespace States
         }
         public void Enter()
         {
+            BoardManager.OnPuzzleCompleted += HandlePuzzleComplete;
             if (StateManager.Instance.LoadPrevious)
             {
                 saveData = StateManager.Instance.CachedData;
@@ -22,6 +23,7 @@ namespace States
             else
             {
                 StartNewGame();
+                SettingsManager.AddGamePlayed();
             }
             uiManager.ShowGameScreen();
         }
@@ -29,6 +31,7 @@ namespace States
         public void Exit()
         {
             BoardManager.Instance.ClearBoard();
+            BoardManager.OnPuzzleCompleted -= HandlePuzzleComplete;
         }
 
         public void Update()
@@ -51,6 +54,12 @@ namespace States
         {
             BoardManager.Instance.SetNewBoard();
             Timer = 0f;
+        }
+        
+        private void HandlePuzzleComplete()
+        {
+            SettingsManager.AddGameCompleted(Timer);
+            StateManager.Instance.ChangeToResultsState();
         }
     }
 }

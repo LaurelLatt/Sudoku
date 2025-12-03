@@ -7,6 +7,7 @@ using UnityEngine;
 public class BoardManager : MonoBehaviour
 {
     public event Action<int> OnMistakeCountChanged;
+    public static event Action OnPuzzleCompleted;
     public static BoardManager Instance { get; private set; }
     public int[][] CurrentBoard = ArrayFunctions.CreateJagged(9, 9);
     
@@ -198,11 +199,6 @@ public class BoardManager : MonoBehaviour
         puzzleTemplate = ArrayFunctions.CopyJagged(puzzleGenerator.GeneratePuzzle());
         solutionBoard = ArrayFunctions.CopyJagged(puzzleGenerator.solvedPuzzle);
         CurrentBoard = ArrayFunctions.CopyJagged(puzzleTemplate);
-        
-        ArrayFunctions.PrintBoard(puzzleTemplate);
-        ArrayFunctions.PrintBoard(solutionBoard);
-        ArrayFunctions.PrintBoard(CurrentBoard);
-        
     }
 
     public void LoadSavedGrids(int[][] puzzleTemplate, int[][] solutionBoard, int[][] currentBoard)
@@ -223,7 +219,7 @@ public class BoardManager : MonoBehaviour
     {
         if (CheckPuzzleComplete())
         {
-            StateManager.Instance.ChangeToResultsState();
+            OnPuzzleCompleted?.Invoke();
         }
     }
 

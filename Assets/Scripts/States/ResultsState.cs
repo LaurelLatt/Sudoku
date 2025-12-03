@@ -12,6 +12,9 @@ namespace States
         public void Enter()
         {
             uiManager.ShowResultsScreen();
+            uiManager.UpdateBestTimeDisplay(SettingsManager.BestTime);
+            uiManager.UpdateGamesPlayedText(SettingsManager.GamesPlayed);
+            uiManager.UpdateWinRateText(SettingsManager.GamesPlayed, SettingsManager.GamesCompleted);
         }
 
         public void Exit()
