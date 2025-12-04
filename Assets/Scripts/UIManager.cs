@@ -18,7 +18,6 @@ public class UIManager : MonoBehaviour
     // Show start screen at start of game
     void Start()
     {
-        ShowStartScreen();
         BoardManager.Instance.OnMistakeCountChanged += UpdateMistakeText;
     }
 

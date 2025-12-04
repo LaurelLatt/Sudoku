@@ -11,7 +11,7 @@ namespace States
         }
         public void Enter()
         {
-            
+            uiManager.ShowStartScreen();
         }
 
         public void Exit()
