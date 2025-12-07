@@ -53,9 +53,11 @@ namespace States
             currentState?.Update();
         }
         
-        private void ChangeState(IGameState newState) {
-            
-            currentState?.Exit();
+        public void ChangeState(IGameState newState, bool callExit = true)
+        {
+            if (currentState != null && callExit)
+                currentState.Exit();
+
             currentState = newState;
             currentState.Enter();
         }
@@ -67,7 +69,7 @@ namespace States
 
         public void ChangeToMenuState() => ChangeState(menuState);
         public void ChangeToGameplayState() => ChangeState(gameplayState);
-        public void ChangeToPauseState() => ChangeState(pauseState);
+        public void ChangeToPauseState() => ChangeState(pauseState, callExit: false);
         public void ChangeToResultsState() => ChangeState(resultsState);
         
         public void StartNewGame()

@@ -11,20 +11,12 @@ public static class SettingsManager
     public static int GamesPlayed => PlayerPrefs.GetInt(KeyGamesPlayed, 0);
     public static int GamesCompleted => PlayerPrefs.GetInt(KeyGamesCompleted, 0);
     public static float BestTime => PlayerPrefs.GetFloat(KeyBestTime, -1f);
-    
-    public static bool CheckTimerEnabled()
-    {
-        return PlayerPrefs.GetInt(KeyTimer, 1) == 1;
-    }
+    public static bool MistakesEnabled => PlayerPrefs.GetInt(KeyMistakes, 1) == 1;
+    public static bool TimerEnabled => PlayerPrefs.GetInt(KeyTimer, 1) == 1;
 
     public static void SetTimerEnabled(bool value)
     {
         PlayerPrefs.SetInt(KeyTimer, value ? 1 : 0);
-    }
-
-    public static bool CheckMistakesEnabled()
-    {
-        return PlayerPrefs.GetInt(KeyMistakes, 1) == 1;
     }
 
     public static void SetMistakesEnabled(bool value)

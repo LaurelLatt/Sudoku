@@ -20,6 +20,9 @@ namespace States
         public void Exit()
         {
             SaveGame();
+            
+            gameplayState.ResumeFromPause();
+            
             Time.timeScale = 1f;
             uiManager.HidePauseScreen();
         }
@@ -28,9 +31,6 @@ namespace States
         
         private void SaveGame()
         {
-            ArrayFunctions.PrintBoard(BoardManager.Instance.CurrentBoard);
-            ArrayFunctions.PrintBoard(BoardManager.Instance.puzzleTemplate);
-            ArrayFunctions.PrintBoard(BoardManager.Instance.solutionBoard);
             SaveData data = new SaveData
             {
                 currentBoard = ArrayFunctions.CopyJagged(BoardManager.Instance.CurrentBoard),

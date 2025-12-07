@@ -13,12 +13,20 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Text gamesPlayedText;
     [SerializeField] private Text winRateText;
     [SerializeField] private Text bestTimeText;
+    [SerializeField] private Toggle mistakesToggle;
+    [SerializeField] private Toggle timerToggle;
     private GameObject currentPanel;
     
     // Show start screen at start of game
     void Start()
     {
+        // Initialize UI to current settings
+        timerToggle.isOn = SettingsManager.TimerEnabled;
+        mistakesToggle.isOn = SettingsManager.MistakesEnabled;
+        
         BoardManager.Instance.OnMistakeCountChanged += UpdateMistakeText;
+        timerToggle.onValueChanged.AddListener(OnTimerToggleChanged);
+        mistakesToggle.onValueChanged.AddListener(OnMistakesToggleChanged);
     }
 
     #region ScreenSetup
@@ -82,6 +90,13 @@ public class UIManager : MonoBehaviour
     {
         mistakesText.text = "Mistakes: " + count.ToString();
     }
+    
+    private void OnMistakesToggleChanged(bool value)
+    {
+        SettingsManager.SetMistakesEnabled(value);
+        mistakesText.gameObject.SetActive(value);
+    }
+    
 
     public void UpdateGamesPlayedText(int count)
     {
@@ -98,6 +113,13 @@ public class UIManager : MonoBehaviour
         timerText.text = TimeToString(time);
     }
 
+    private void OnTimerToggleChanged(bool value)
+    {
+        SettingsManager.SetTimerEnabled(value);
+        timerText.gameObject.SetActive(value);
+        
+    }
+
     public void UpdateBestTimeDisplay(float time)
     {
         bestTimeText.text = TimeToString(time);
@@ -110,4 +132,5 @@ public class UIManager : MonoBehaviour
         string text = $"{minutes:0}:{seconds:00}";
         return text;
     }
+    
 }
