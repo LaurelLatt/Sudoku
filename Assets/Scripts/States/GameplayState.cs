@@ -18,6 +18,7 @@ namespace States
             if (!resumed)
             {
                 BoardManager.OnPuzzleCompleted += HandlePuzzleComplete;
+                BoardManager.OnMistakesLimitReached += HandleMistakesLimitReached;
                 if (StateManager.Instance.LoadPrevious)
                 {
                     saveData = StateManager.Instance.CachedData;
@@ -43,6 +44,7 @@ namespace States
             Debug.Log("Exit Gameplay State");
             Debug.Log("Removing onPuzzleCompleted listener");
             BoardManager.OnPuzzleCompleted -= HandlePuzzleComplete;
+            BoardManager.OnMistakesLimitReached += HandleMistakesLimitReached;
         }
 
         public void Update()
@@ -72,7 +74,7 @@ namespace States
         {
             BoardManager.Instance.SetNewBoard();
             Timer = 0f;
-            BoardManager.Instance.MistakesOn = true;
+            BoardManager.Instance.ResetMistakes();
             uiManager.SetUpMistakeUI();
             uiManager.SetUpTimerUI();
         }
@@ -80,7 +82,21 @@ namespace States
         private void HandlePuzzleComplete()
         {
             Debug.Log("HandlePuzzleComplete");
-            SettingsManager.AddGameCompleted(Timer);
+            if (SettingsManager.TimerEnabled)
+            {
+                SettingsManager.AddGameCompleted(Timer);
+            }
+            else
+            {
+                SettingsManager.AddGameCompleted(-1f);
+            }
+            uiManager.SetWinText(true);
+            StateManager.Instance.ChangeToResultsState();
+        }
+
+        private void HandleMistakesLimitReached()
+        {
+            uiManager.SetWinText(false);
             StateManager.Instance.ChangeToResultsState();
         }
     }

@@ -8,6 +8,7 @@ public class BoardManager : MonoBehaviour
 {
     public event Action<int> OnMistakeCountChanged;
     public static event Action OnPuzzleCompleted;
+    public static event Action OnMistakesLimitReached;
     public static BoardManager Instance { get; private set; }
     public int[][] CurrentBoard = ArrayFunctions.CreateJagged(9, 9);
     
@@ -24,7 +25,6 @@ public class BoardManager : MonoBehaviour
     
     public int MistakeCount { get; private set; }
     public bool MistakesOn;
-    public bool ShowIncorrectMistakes;
     
     private void Awake()
     {
@@ -69,6 +69,16 @@ public class BoardManager : MonoBehaviour
         return true;
     }
     
+    private void HandleCorrectInput()
+    {
+        Debug.Log("Handling correct input");
+        if (CheckPuzzleComplete())
+        {
+            Debug.Log("Correct!");
+            OnPuzzleCompleted?.Invoke();
+        }
+    }
+    
     public void SelectCell(CellView view) {
         
         if (selectedCellModel != null)
@@ -106,6 +116,8 @@ public class BoardManager : MonoBehaviour
         CommandManager.Instance.Execute(cmd);
     }
 
+    #region Board set up and teardown
+    
     public void SetNewBoard()
     {
         PopulateGrids();
@@ -134,6 +146,7 @@ public class BoardManager : MonoBehaviour
 
     public void ClearBoard()
     {
+        selectedCellView.UnhighlightCell();
         for (int r = 0; r < 9; r++)
         {
             for (int c = 0; c < 9; c++)
@@ -210,6 +223,10 @@ public class BoardManager : MonoBehaviour
         this.solutionBoard = ArrayFunctions.CopyJagged(solutionBoard);
         CurrentBoard = ArrayFunctions.CopyJagged(currentBoard);
     }
+
+    #endregion
+    
+    #region Mistake Handling
     
     private void HandleMistake(bool countAsMistake)
     {
@@ -217,7 +234,19 @@ public class BoardManager : MonoBehaviour
         {
             MistakeCount++;
             OnMistakeCountChanged?.Invoke(MistakeCount);
+
+            if (MistakeCount >= 3)
+            {
+                OnMistakesLimitReached?.Invoke();
+            }
         }
+    }
+
+    public void ResetMistakes()
+    {
+        MistakeCount = 0;
+        MistakesOn = true;
+        OnMistakeCountChanged?.Invoke(MistakeCount);
     }
 
     public void ToggleMistakesOn(bool isOn)
@@ -225,16 +254,10 @@ public class BoardManager : MonoBehaviour
         MistakesOn = isOn;
     }
 
-    private void HandleCorrectInput()
-    {
-        Debug.Log("Handling correct input");
-        if (CheckPuzzleComplete())
-        {
-            Debug.Log("Correct!");
-            OnPuzzleCompleted?.Invoke();
-        }
-    }
-
+    #endregion
+    
+    #region Dev tool
+    
     public void CompletePuzzle()
     {
         for (int i = 0; i < 9; i++)
@@ -252,4 +275,5 @@ public class BoardManager : MonoBehaviour
         HandleCorrectInput();
     }
     
+    #endregion
 }

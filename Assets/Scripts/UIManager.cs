@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Text gamesPlayedText;
     [SerializeField] private Text winRateText;
     [SerializeField] private Text bestTimeText;
+    [SerializeField] private Text gameOverText;
     [SerializeField] private Toggle mistakesToggle;
     [SerializeField] private Toggle timerToggle;
     private GameObject currentPanel;
@@ -81,7 +82,11 @@ public class UIManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-    
+
+    public void SetWinText(bool gameWon)
+    {
+        gameOverText.text = gameWon ? "You Win!" : "Game Over";
+    }
     
     public void UpdateMistakeText(int count)
     {
