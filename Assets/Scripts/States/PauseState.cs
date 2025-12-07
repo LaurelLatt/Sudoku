@@ -37,7 +37,8 @@ namespace States
                 puzzleBoard = ArrayFunctions.CopyJagged(BoardManager.Instance.puzzleTemplate),
                 solvedBoard = ArrayFunctions.CopyJagged(BoardManager.Instance.solutionBoard),
                 timer = gameplayState.Timer,
-                mistakes = BoardManager.Instance.MistakeCount
+                mistakes = BoardManager.Instance.MistakeCount,
+                mistakesEnabled = BoardManager.Instance.MistakesOn
             };
 
             SaveSystem.Save(data);

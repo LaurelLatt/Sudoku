@@ -61,12 +61,18 @@ namespace States
             Timer = saveData.timer;
             uiManager.UpdateTimerDisplay(Timer);
             uiManager.UpdateMistakeText(saveData.mistakes);
+            BoardManager.Instance.MistakesOn = saveData.mistakesEnabled;
+            uiManager.SetUpMistakeUI();
+            uiManager.SetUpTimerUI();
         }
 
         private void StartNewGame()
         {
             BoardManager.Instance.SetNewBoard();
             Timer = 0f;
+            BoardManager.Instance.MistakesOn = true;
+            uiManager.SetUpMistakeUI();
+            uiManager.SetUpTimerUI();
         }
         
         private void HandlePuzzleComplete()

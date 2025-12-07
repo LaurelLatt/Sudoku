@@ -11,6 +11,7 @@ public class SaveData
 
     public float timer;
     public int mistakes;
+    public bool mistakesEnabled;
 }
 public static class SaveSystem
 {

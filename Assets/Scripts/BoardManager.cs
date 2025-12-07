@@ -23,6 +23,8 @@ public class BoardManager : MonoBehaviour
     public int[][] solutionBoard { get; private set; }
     
     public int MistakeCount { get; private set; }
+    public bool MistakesOn;
+    public bool ShowIncorrectMistakes;
     
     private void Awake()
     {
@@ -163,7 +165,7 @@ public class BoardManager : MonoBehaviour
         
         if (isEditable && displayValue != 0 && displayValue != correctValue)
         {
-            cellView.SetTextToWrongColor();
+            cellView.SetTextToWrongColor(true);
         }
         
         RegisterCell(cell);
@@ -209,10 +211,18 @@ public class BoardManager : MonoBehaviour
         CurrentBoard = ArrayFunctions.CopyJagged(currentBoard);
     }
     
-    private void HandleMistake()
+    private void HandleMistake(bool countAsMistake)
     {
-        MistakeCount++;
-        OnMistakeCountChanged?.Invoke(MistakeCount);
+        if (MistakesOn && countAsMistake)
+        {
+            MistakeCount++;
+            OnMistakeCountChanged?.Invoke(MistakeCount);
+        }
+    }
+
+    public void ToggleMistakesOn(bool isOn)
+    {
+        MistakesOn = isOn;
     }
 
     private void HandleCorrectInput()

@@ -20,14 +20,9 @@ public class UIManager : MonoBehaviour
     // Show start screen at start of game
     void Start()
     {
-        // Initialize UI to current settings
-        timerToggle.isOn = SettingsManager.TimerEnabled;
-        mistakesToggle.isOn = SettingsManager.MistakesEnabled;
-        
         BoardManager.Instance.OnMistakeCountChanged += UpdateMistakeText;
-        timerToggle.onValueChanged.AddListener(OnTimerToggleChanged);
-        mistakesToggle.onValueChanged.AddListener(OnMistakesToggleChanged);
     }
+    
 
     #region ScreenSetup
     
@@ -86,6 +81,7 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     
+    
     public void UpdateMistakeText(int count)
     {
         mistakesText.text = "Mistakes: " + count.ToString();
@@ -95,8 +91,19 @@ public class UIManager : MonoBehaviour
     {
         SettingsManager.SetMistakesEnabled(value);
         mistakesText.gameObject.SetActive(value);
+        if (!value)
+        {
+            mistakesToggle.interactable = false;
+        }
     }
     
+    public void SetUpMistakeUI()
+    {
+        mistakesToggle.isOn = SettingsManager.MistakesEnabled;
+        mistakesText.gameObject.SetActive(SettingsManager.MistakesEnabled);
+        mistakesToggle.onValueChanged.AddListener(OnMistakesToggleChanged);
+        mistakesToggle.onValueChanged.AddListener(BoardManager.Instance.ToggleMistakesOn);
+    }
 
     public void UpdateGamesPlayedText(int count)
     {
@@ -118,6 +125,13 @@ public class UIManager : MonoBehaviour
         SettingsManager.SetTimerEnabled(value);
         timerText.gameObject.SetActive(value);
         
+    }
+    
+    public void SetUpTimerUI()
+    {
+        timerToggle.isOn = SettingsManager.TimerEnabled;
+        timerText.gameObject.SetActive(SettingsManager.TimerEnabled);
+        timerToggle.onValueChanged.AddListener(OnTimerToggleChanged);
     }
 
     public void UpdateBestTimeDisplay(float time)

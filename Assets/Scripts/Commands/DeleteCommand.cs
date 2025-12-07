@@ -20,7 +20,12 @@ namespace Commands
 
         public override void Undo()
         {
-            cell.SetValue(oldValue);
+            cell.SetValue(oldValue, countAsMistake: false);
+        }
+
+        public override void Redo()
+        {
+            cell.SetValue(newValue, notify: false, countAsMistake: false);
         }
     }
 }

@@ -41,7 +41,7 @@ namespace Commands
         {
             if (redoStack.Count <= 0) return;
             Command cmd = redoStack.Pop();
-            cmd.Execute();
+            cmd.Redo();
             undoStack.Push(cmd);
         }
     }
