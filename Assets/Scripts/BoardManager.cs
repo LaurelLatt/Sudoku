@@ -65,7 +65,7 @@ public class BoardManager : MonoBehaviour
                 }
             }
         }
-
+        Debug.Log("Returning true");
         return true;
     }
     
@@ -227,8 +227,10 @@ public class BoardManager : MonoBehaviour
 
     private void HandleCorrectInput()
     {
+        Debug.Log("Handling correct input");
         if (CheckPuzzleComplete())
         {
+            Debug.Log("Correct!");
             OnPuzzleCompleted?.Invoke();
         }
     }

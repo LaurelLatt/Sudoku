@@ -40,6 +40,8 @@ namespace States
         public void Exit()
         {
             BoardManager.Instance.ClearBoard();
+            Debug.Log("Exit Gameplay State");
+            Debug.Log("Removing onPuzzleCompleted listener");
             BoardManager.OnPuzzleCompleted -= HandlePuzzleComplete;
         }
 
@@ -77,6 +79,7 @@ namespace States
         
         private void HandlePuzzleComplete()
         {
+            Debug.Log("HandlePuzzleComplete");
             SettingsManager.AddGameCompleted(Timer);
             StateManager.Instance.ChangeToResultsState();
         }

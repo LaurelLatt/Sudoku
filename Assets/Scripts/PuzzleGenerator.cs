@@ -1,5 +1,19 @@
 using UnityEngine;
+using Newtonsoft.Json;
 
+[System.Serializable]
+public class PuzzleSet
+{
+    public Puzzle[] puzzles;
+}
+
+[System.Serializable]
+public class Puzzle
+{
+    public int id;
+    public int[][] puzzleBoard;
+    public int[][] solvedBoard;
+}
 public class PuzzleGenerator : MonoBehaviour
 {
     public int[][] solvedPuzzle = new int[][]
@@ -29,7 +43,22 @@ public class PuzzleGenerator : MonoBehaviour
 
     public int[][] GeneratePuzzle()
     {
+        LoadPuzzleFromFile();
         return gamePuzzle;
     }
-    
+
+    private void LoadPuzzleFromFile()
+    {
+        TextAsset json = Resources.Load<TextAsset>("PuzzleSets/puzzles");
+        if (json == null)
+        {
+            Debug.LogError("Puzzle JSON not found in Resources/PuzzleSets/");
+        }
+
+        PuzzleSet set =  JsonConvert.DeserializeObject<PuzzleSet>(json.text);
+        Puzzle chosen = set.puzzles[Random.Range(0, set.puzzles.Length)];
+        
+        solvedPuzzle = ArrayFunctions.CopyJagged(chosen.solvedBoard);
+        gamePuzzle = ArrayFunctions.CopyJagged(chosen.puzzleBoard);
+    }
 }

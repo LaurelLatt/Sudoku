@@ -53,7 +53,7 @@ namespace States
             currentState?.Update();
         }
         
-        public void ChangeState(IGameState newState, bool callExit = true)
+        private void ChangeState(IGameState newState, bool callExit = true)
         {
             if (currentState != null && callExit)
                 currentState.Exit();
@@ -81,7 +81,7 @@ namespace States
         public void ResumeGame()
         {
             LoadPrevious = true;
-            CachedData = SaveSystem.Load();
+            CachedData = GameSessionSave.Load();
             if (CachedData != null)
             {
                 ChangeToGameplayState();

@@ -31,6 +31,7 @@ public static class SettingsManager
 
     public static void AddGameCompleted(float completionTime)
     {
+        Debug.Log($"Adding game completed: {GamesCompleted + 1}");
         PlayerPrefs.SetInt(KeyGamesCompleted, GamesCompleted + 1);
 
         if (BestTime < 0 || completionTime < BestTime)

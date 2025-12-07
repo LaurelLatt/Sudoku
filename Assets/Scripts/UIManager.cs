@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -112,8 +113,10 @@ public class UIManager : MonoBehaviour
 
     public void UpdateWinRateText(int gamesPlayed, int gamesCompleted)
     {
-        int percentage = gamesCompleted / gamesPlayed * 100;
-        winRateText.text = percentage + "%";
+        
+        float percentage = ((float)gamesCompleted / gamesPlayed) * 100f;
+        
+        winRateText.text = Math.Floor(percentage) + "%";
     }
     public void UpdateTimerDisplay(float time)
     {

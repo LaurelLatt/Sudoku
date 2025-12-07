@@ -13,7 +13,7 @@ public class SaveData
     public int mistakes;
     public bool mistakesEnabled;
 }
-public static class SaveSystem
+public static class GameSessionSave
 {
     private static string SavePath =>
         Path.Combine(Application.persistentDataPath, "savegame.json");

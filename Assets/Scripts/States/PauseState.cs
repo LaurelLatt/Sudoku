@@ -41,7 +41,7 @@ namespace States
                 mistakesEnabled = BoardManager.Instance.MistakesOn
             };
 
-            SaveSystem.Save(data);
+            GameSessionSave.Save(data);
         }
     }
 }
