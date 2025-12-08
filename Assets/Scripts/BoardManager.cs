@@ -146,7 +146,11 @@ public class BoardManager : MonoBehaviour
 
     public void ClearBoard()
     {
-        selectedCellView.UnhighlightCell();
+        if (selectedCellView != null)
+        {
+            selectedCellView.UnhighlightCell();
+        }
+
         for (int r = 0; r < 9; r++)
         {
             for (int c = 0; c < 9; c++)

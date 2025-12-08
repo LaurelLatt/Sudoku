@@ -19,16 +19,7 @@ namespace States
             {
                 BoardManager.OnPuzzleCompleted += HandlePuzzleComplete;
                 BoardManager.OnMistakesLimitReached += HandleMistakesLimitReached;
-                if (StateManager.Instance.LoadPrevious)
-                {
-                    saveData = StateManager.Instance.CachedData;
-                    LoadSavedGame();
-                }
-                else
-                {
-                    StartNewGame();
-                    SettingsManager.AddGamePlayed();
-                }
+                SetUpGame();
             }
             else
             {
@@ -41,10 +32,8 @@ namespace States
         public void Exit()
         {
             BoardManager.Instance.ClearBoard();
-            Debug.Log("Exit Gameplay State");
-            Debug.Log("Removing onPuzzleCompleted listener");
             BoardManager.OnPuzzleCompleted -= HandlePuzzleComplete;
-            BoardManager.OnMistakesLimitReached += HandleMistakesLimitReached;
+            BoardManager.OnMistakesLimitReached -= HandleMistakesLimitReached;
         }
 
         public void Update()
@@ -56,6 +45,20 @@ namespace States
         public void ResumeFromPause()
         {
             resumed = true;
+        }
+
+        private void SetUpGame()
+        {
+            if (StateManager.Instance.LoadPrevious)
+            {
+                saveData = StateManager.Instance.CachedData;
+                LoadSavedGame();
+            }
+            else
+            {
+                StartNewGame();
+                SettingsManager.AddGamePlayed();
+            }
         }
         private void LoadSavedGame()
         {

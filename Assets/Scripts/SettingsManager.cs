@@ -41,4 +41,10 @@ public static class SettingsManager
         if (BestTime < 0 || completionTime < BestTime)
             PlayerPrefs.SetFloat(KeyBestTime, completionTime);
     }
+
+    public static void ClearAllSettings()
+    {
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+    }
 }

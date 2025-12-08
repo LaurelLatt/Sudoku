@@ -24,7 +24,14 @@ public class UIManager : MonoBehaviour
     {
         BoardManager.Instance.OnMistakeCountChanged += UpdateMistakeText;
     }
-    
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            QuitGame();
+        }
+    }
 
     #region ScreenSetup
     
@@ -88,29 +95,6 @@ public class UIManager : MonoBehaviour
         gameOverText.text = gameWon ? "You Win!" : "Game Over";
     }
     
-    public void UpdateMistakeText(int count)
-    {
-        mistakesText.text = "Mistakes: " + count.ToString();
-    }
-    
-    private void OnMistakesToggleChanged(bool value)
-    {
-        SettingsManager.SetMistakesEnabled(value);
-        mistakesText.gameObject.SetActive(value);
-        if (!value)
-        {
-            mistakesToggle.interactable = false;
-        }
-    }
-    
-    public void SetUpMistakeUI()
-    {
-        mistakesToggle.isOn = SettingsManager.MistakesEnabled;
-        mistakesText.gameObject.SetActive(SettingsManager.MistakesEnabled);
-        mistakesToggle.onValueChanged.AddListener(OnMistakesToggleChanged);
-        mistakesToggle.onValueChanged.AddListener(BoardManager.Instance.ToggleMistakesOn);
-    }
-
     public void UpdateGamesPlayedText(int count)
     {
         gamesPlayedText.text = count.ToString();
@@ -123,6 +107,35 @@ public class UIManager : MonoBehaviour
         
         winRateText.text = Math.Floor(percentage) + "%";
     }
+    
+    #region Mistakes
+        
+        public void UpdateMistakeText(int count)
+        {
+            mistakesText.text = "Mistakes: " + count.ToString();
+        }
+        
+        private void OnMistakesToggleChanged(bool value)
+        {
+            SettingsManager.SetMistakesEnabled(value);
+            mistakesText.gameObject.SetActive(value);
+            if (!value)
+            {
+                mistakesToggle.interactable = false;
+            }
+        }
+        
+        public void SetUpMistakeUI()
+        {
+            mistakesToggle.isOn = SettingsManager.MistakesEnabled;
+            mistakesText.gameObject.SetActive(SettingsManager.MistakesEnabled);
+            mistakesToggle.onValueChanged.AddListener(OnMistakesToggleChanged);
+            mistakesToggle.onValueChanged.AddListener(BoardManager.Instance.ToggleMistakesOn);
+        }
+    
+        #endregion
+        
+    #region Timer functions
     public void UpdateTimerDisplay(float time)
     {
         timerText.text = TimeToString(time);
@@ -144,6 +157,10 @@ public class UIManager : MonoBehaviour
 
     public void UpdateBestTimeDisplay(float time)
     {
+        if (time < 0)
+        {
+            bestTimeText.text = "N/A";
+        }
         bestTimeText.text = TimeToString(time);
     }
 
@@ -155,4 +172,11 @@ public class UIManager : MonoBehaviour
         return text;
     }
     
+    #endregion
+
+    public void ClearSettings()
+    {
+        Debug.Log("Cleared UI");
+        SettingsManager.ClearAllSettings();
+    }
 }

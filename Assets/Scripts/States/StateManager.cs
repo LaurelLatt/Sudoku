@@ -44,7 +44,6 @@ namespace States
             pauseState = new PauseState(uiManager, gameplayState);
             resultsState = new ResultsState(uiManager);
             
-            // set menu as start
             ChangeState(menuState);
         }
 
