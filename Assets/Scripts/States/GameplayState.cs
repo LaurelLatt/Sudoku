@@ -71,6 +71,7 @@ namespace States
             BoardManager.Instance.MistakesOn = saveData.mistakesEnabled;
             uiManager.SetUpMistakeUI();
             uiManager.SetUpTimerUI();
+            GameSessionSave.Delete();
         }
 
         private void StartNewGame()

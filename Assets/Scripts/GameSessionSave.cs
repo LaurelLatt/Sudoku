@@ -37,5 +37,12 @@ public static class GameSessionSave
         // Deserialize using Newtonsoft.Json
         return JsonConvert.DeserializeObject<SaveData>(json);
     }
-    
+
+    public static void Delete()
+    {
+        if (File.Exists(SavePath))
+        {
+            File.Delete(SavePath);
+        }
+    }
 }

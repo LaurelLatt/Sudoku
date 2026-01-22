@@ -102,7 +102,11 @@ public class UIManager : MonoBehaviour
 
     public void UpdateWinRateText(int gamesPlayed, int gamesCompleted)
     {
-        
+        // fix for playerprefs reset bug with game in progress (testing issue)
+        if (gamesPlayed == 0)
+        {
+            gamesPlayed = 1;
+        }
         float percentage = ((float)gamesCompleted / gamesPlayed) * 100f;
         
         winRateText.text = Math.Floor(percentage) + "%";
