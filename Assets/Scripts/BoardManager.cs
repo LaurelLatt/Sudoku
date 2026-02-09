@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Commands;
 using States;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class BoardManager : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class BoardManager : MonoBehaviour
     public int[][] CurrentBoard = ArrayFunctions.CreateJagged(9, 9);
     
     [SerializeField] private List<CellView> cellViewList = new List<CellView>(81);
-    [SerializeField] private PuzzleGenerator puzzleGenerator;
+    [FormerlySerializedAs("puzzleGenerator")] [SerializeField] private SimplePuzzleGenerator simplePuzzleGenerator;
     
     private Cell selectedCellModel;
     private CellView selectedCellView;
@@ -93,6 +94,12 @@ public class BoardManager : MonoBehaviour
         Debug.Log($"Selected cell: {selectedCellModel.Row}, {selectedCellModel.Col}, editable: {selectedCellModel.IsEditable}");
     }
 
+    // public method for interactive buttons
+    public void PlaceNumberButton(int number)
+    {
+        PlaceNumber(number);
+    }
+    
     private void PlaceNumber(int number) {
         if (!selectedCellModel.IsEditable)
         {
@@ -215,8 +222,8 @@ public class BoardManager : MonoBehaviour
     private void PopulateGrids()
     {
         TransferCellViewListToArray();
-        puzzleTemplate = ArrayFunctions.CopyJagged(puzzleGenerator.GeneratePuzzle());
-        solutionBoard = ArrayFunctions.CopyJagged(puzzleGenerator.solvedPuzzle);
+        puzzleTemplate = ArrayFunctions.CopyJagged(simplePuzzleGenerator.GeneratePuzzle());
+        solutionBoard = ArrayFunctions.CopyJagged(simplePuzzleGenerator.solvedPuzzle);
         CurrentBoard = ArrayFunctions.CopyJagged(puzzleTemplate);
     }
 

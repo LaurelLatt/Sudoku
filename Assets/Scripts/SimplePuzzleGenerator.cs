@@ -14,7 +14,7 @@ public class Puzzle
     public int[][] puzzleBoard;
     public int[][] solvedBoard;
 }
-public class PuzzleGenerator : MonoBehaviour
+public class SimplePuzzleGenerator : MonoBehaviour
 {
     public int[][] solvedPuzzle = new int[][]
     {
